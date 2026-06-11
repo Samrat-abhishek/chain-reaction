@@ -62,11 +62,9 @@ h1{
 
 const rows = 6;
 const cols = 6;
-
 let currentPlayer = 1;
 
 const board = [];
-
 const grid = document.getElementById("grid");
 const turnText = document.getElementById("turn");
 
@@ -91,6 +89,8 @@ for(let r=0;r<rows;r++){
 
         grid.appendChild(cell);
     }
+}
+
 function handleMove(){
 
     const row=parseInt(this.dataset.row);
@@ -106,6 +106,14 @@ function handleMove(){
     }
 
     addOrb(row,col,currentPlayer);
+
+    render();
+
+    currentPlayer =
+        currentPlayer===1 ? 2 : 1;
+
+    updateTurn();
+}
 
 function getCriticalMass(row,col){
 
@@ -166,13 +174,7 @@ function explode(row,col,player){
         ){
             addOrb(nr,nc,player);
         }
-
     });
-}
-    currentPlayer =
-        currentPlayer===1 ? 2 : 1;
-
-    updateTurn();
 }
 
 function updateTurn(){
@@ -214,6 +216,7 @@ function render(){
 render();
 
 </script>
+
 
 </body>
 </html>
