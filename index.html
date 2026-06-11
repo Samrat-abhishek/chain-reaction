@@ -1,64 +1,162 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chain Reaction</title>
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            text-align:center;
-            background:#111;
-            color:white;
-        }
+<meta charset="UTF-8">
+<title>Chain Reaction</title>
 
-        .grid{
-            display:grid;
-            grid-template-columns:repeat(6,60px);
-            gap:5px;
-            justify-content:center;
-            margin-top:20px;
-        }
+<style>
+body{
+    background:#111;
+    color:white;
+    font-family:Arial,sans-serif;
+    text-align:center;
+}
 
-        .cell{
-            width:60px;
-            height:60px;
-            border:2px solid white;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:24px;
-            cursor:pointer;
-        }
-    </style>
+h1{
+    margin-top:20px;
+}
+
+#turn{
+    margin:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(6,70px);
+    gap:5px;
+    justify-content:center;
+}
+
+.cell{
+    width:70px;
+    height:70px;
+    border:2px solid white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    cursor:pointer;
+    user-select:none;
+}
+
+.red{
+    color:#ff4d4d;
+    border-color:#ff4d4d;
+}
+
+.green{
+    color:#44ff44;
+    border-color:#44ff44;
+}
+</style>
 </head>
+
 <body>
 
-<h1>Chain Reaction Demo</h1>
-<h3 id="turn">Player 1 Turn</h3>
+<h1>Chain Reaction</h1>
+<h2 id="turn">🔴 Player 1 Turn</h2>
 
 <div class="grid" id="grid"></div>
 
 <script>
+
+const rows = 6;
+const cols = 6;
+
 let currentPlayer = 1;
-const turnText = document.getElementById("turn");
+
+const board = [];
+
 const grid = document.getElementById("grid");
+const turnText = document.getElementById("turn");
 
-for(let i=0;i<36;i++){
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
-    cell.dataset.count = 0;
+for(let r=0;r<rows;r++){
 
-    cell.onclick = () => {
-        let count = parseInt(cell.dataset.count);
-        count++;
-        cell.dataset.count = count;
-        cell.innerText = count;
+    board[r]=[];
 
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        turnText.innerText = `Player ${currentPlayer} Turn`;
-    };
+    for(let c=0;c<cols;c++){
 
-    grid.appendChild(cell);
+        board[r][c]={
+            count:0,
+            owner:0
+        };
+
+        const cell=document.createElement("div");
+
+        cell.className="cell";
+        cell.dataset.row=r;
+        cell.dataset.col=c;
+
+        cell.addEventListener("click",handleMove);
+
+        grid.appendChild(cell);
+    }
 }
+
+function handleMove(){
+
+    const row=parseInt(this.dataset.row);
+    const col=parseInt(this.dataset.col);
+
+    const cellData=board[row][col];
+
+    // only empty or own cell allowed
+    if(
+        cellData.owner!==0 &&
+        cellData.owner!==currentPlayer
+    ){
+        return;
+    }
+
+    cellData.count++;
+    cellData.owner=currentPlayer;
+
+    render();
+
+    currentPlayer =
+        currentPlayer===1 ? 2 : 1;
+
+    updateTurn();
+}
+
+function updateTurn(){
+
+    if(currentPlayer===1){
+        turnText.innerHTML="🔴 Player 1 Turn";
+    }else{
+        turnText.innerHTML="🟢 Player 2 Turn";
+    }
+}
+
+function render(){
+
+    const cells=document.querySelectorAll(".cell");
+
+    cells.forEach(cell=>{
+
+        const row=parseInt(cell.dataset.row);
+        const col=parseInt(cell.dataset.col);
+
+        const data=board[row][col];
+
+        cell.textContent=
+            data.count===0 ? "" : data.count;
+
+        cell.classList.remove("red");
+        cell.classList.remove("green");
+
+        if(data.owner===1){
+            cell.classList.add("red");
+        }
+
+        if(data.owner===2){
+            cell.classList.add("green");
+        }
+    });
+}
+
+render();
+
 </script>
 
 </body>
