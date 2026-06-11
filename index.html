@@ -27,12 +27,29 @@ h1{
     justify-content:center;
 }
 
-.cell
+.cell{
+    width:70px;
+    height:70px;
+    border:2px solid #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.red{
+    border-color:#ff4d4d;
+}
+
+.green{
+    border-color:#44ff44;
+}
+
+.orbs{
     display:flex;
     gap:4px;
-    justify-content:center;
-    align-items:center;
     flex-wrap:wrap;
+    justify-content:center;
 }
 
 .orb{
@@ -48,15 +65,6 @@ h1{
 .greenOrb{
     background:#44ff44;
 }
-.red{
-    color:#ff4d4d;
-    border-color:#ff4d4d;
-}
-
-.green{
-    color:#44ff44;
-    border-color:#44ff44;
-}
 </style>
 </head>
 
@@ -71,9 +79,11 @@ h1{
 
 const rows = 6;
 const cols = 6;
+
 let currentPlayer = 1;
-let totalMoves = 0;
+
 const board = [];
+
 const grid = document.getElementById("grid");
 const turnText = document.getElementById("turn");
 
@@ -115,8 +125,7 @@ function handleMove(){
     }
 
     addOrb(row,col,currentPlayer);
-    totalMoves++;
-checkWinner();
+
     render();
 
     currentPlayer =
@@ -194,45 +203,7 @@ function updateTurn(){
     }else{
         turnText.innerHTML="🟢 Player 2 Turn";
     }
-    
-function checkWinner(){
-
-if(totalMoves < 2){
-    return;
 }
-
-let red = 0;
-let green = 0;
-
-for(let r=0;r<rows;r++){
-
-    for(let c=0;c<cols;c++){
-
-        if(board[r][c].owner===1){
-            red++;
-        }
-
-        if(board[r][c].owner===2){
-            green++;
-        }
-    }
-}
-
-if(red===0){
-    alert("🟢 Player 2 Wins!");
-    location.reload();
-}
-
-if(green===0){
-    alert("🔴 Player 1 Wins!");
-    location.reload();
-}
-```
-
-}
-
-}
-
 
 function render(){
 
@@ -247,25 +218,24 @@ function render(){
 
         cell.innerHTML="";
 
-if(data.count>0){
+        if(data.count>0){
 
-    let html='<div class="orbs">';
+            let html='<div class="orbs">';
 
-    for(let i=0;i<data.count;i++){
+            for(let i=0;i<data.count;i++){
 
-        html+=`
-        <div class="
-        orb
-        ${data.owner===1
-            ? 'redOrb'
-            : 'greenOrb'}">
-        </div>`;
-    }
+                html+=`
+                <div class="orb ${
+                    data.owner===1
+                    ? 'redOrb'
+                    : 'greenOrb'
+                }"></div>`;
+            }
 
-    html+='</div>';
+            html+='</div>';
 
-    cell.innerHTML=html;
-}
+            cell.innerHTML=html;
+        }
 
         cell.classList.remove("red");
         cell.classList.remove("green");
@@ -283,7 +253,6 @@ if(data.count>0){
 render();
 
 </script>
-
 
 </body>
 </html>
