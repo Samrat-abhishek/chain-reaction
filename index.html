@@ -91,8 +91,6 @@ for(let r=0;r<rows;r++){
 
         grid.appendChild(cell);
     }
-}
-
 function handleMove(){
 
     const row=parseInt(this.dataset.row);
@@ -100,7 +98,6 @@ function handleMove(){
 
     const cellData=board[row][col];
 
-    // only empty or own cell allowed
     if(
         cellData.owner!==0 &&
         cellData.owner!==currentPlayer
@@ -108,11 +105,70 @@ function handleMove(){
         return;
     }
 
-    cellData.count++;
-    cellData.owner=currentPlayer;
+    addOrb(row,col,currentPlayer);
 
-    render();
+function getCriticalMass(row,col){
 
+    const isCorner =
+        (row===0 && col===0) ||
+        (row===0 && col===cols-1) ||
+        (row===rows-1 && col===0) ||
+        (row===rows-1 && col===cols-1);
+
+    if(isCorner) return 2;
+
+    const isEdge =
+        row===0 ||
+        row===rows-1 ||
+        col===0 ||
+        col===cols-1;
+
+    if(isEdge) return 3;
+
+    return 4;
+}
+
+function addOrb(row,col,player){
+
+    board[row][col].count++;
+    board[row][col].owner=player;
+
+    if(
+        board[row][col].count >=
+        getCriticalMass(row,col)
+    ){
+        explode(row,col,player);
+    }
+}
+
+function explode(row,col,player){
+
+    board[row][col].count=0;
+    board[row][col].owner=0;
+
+    const dirs=[
+        [-1,0],
+        [1,0],
+        [0,-1],
+        [0,1]
+    ];
+
+    dirs.forEach(dir=>{
+
+        const nr=row+dir[0];
+        const nc=col+dir[1];
+
+        if(
+            nr>=0 &&
+            nr<rows &&
+            nc>=0 &&
+            nc<cols
+        ){
+            addOrb(nr,nc,player);
+        }
+
+    });
+}
     currentPlayer =
         currentPlayer===1 ? 2 : 1;
 
