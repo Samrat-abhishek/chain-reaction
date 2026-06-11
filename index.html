@@ -217,8 +217,27 @@ function render(){
 
         const data=board[row][col];
 
-        cell.textContent=
-            data.count===0 ? "" : data.count;
+        cell.innerHTML="";
+
+if(data.count>0){
+
+    let html='<div class="orbs">';
+
+    for(let i=0;i<data.count;i++){
+
+        html+=`
+        <div class="
+        orb
+        ${data.owner===1
+            ? 'redOrb'
+            : 'greenOrb'}">
+        </div>`;
+    }
+
+    html+='</div>';
+
+    cell.innerHTML=html;
+}
 
         cell.classList.remove("red");
         cell.classList.remove("green");
