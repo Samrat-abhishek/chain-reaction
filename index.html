@@ -265,22 +265,58 @@ function render(){
 
         if(data.count>0){
 
-            let html='<div class="orbs">';
+    const color =
+        data.owner===1
+        ? 'redOrb'
+        : 'greenOrb';
 
-            for(let i=0;i<data.count;i++){
+    let html='<div class="orbs">';
 
-                html+=`
-                <div class="orb ${
-                    data.owner===1
-                    ? 'redOrb'
-                    : 'greenOrb'
-                }"></div>`;
-            }
+    if(data.count===1){
 
-            html+='</div>';
+        html+=`
+        <div class="orb ${color}"
+        style="
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        ">
+        </div>`;
 
-            cell.innerHTML=html;
-        }
+    }
+
+    if(data.count===2){
+
+        html+=`
+        <div class="orb ${color}"
+        style="left:25%;top:50%;">
+        </div>
+
+        <div class="orb ${color}"
+        style="left:55%;top:50%;">
+        </div>`;
+    }
+
+    if(data.count>=3){
+
+        html+=`
+        <div class="orb ${color}"
+        style="left:20%;top:55%;">
+        </div>
+
+        <div class="orb ${color}"
+        style="left:60%;top:55%;">
+        </div>
+
+        <div class="orb ${color}"
+        style="left:40%;top:20%;">
+        </div>`;
+    }
+
+    html+='</div>';
+
+    cell.innerHTML=html;
+}
 
         cell.classList.remove("red");
         cell.classList.remove("green");
