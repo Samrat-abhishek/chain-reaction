@@ -36,13 +36,17 @@ h1{
     justify-content:center;
     cursor:pointer;
 }
-
+.cell{
+    transition:all .15s ease;
+}
 .red{
     border-color:#ff4d4d;
+    box-shadow:0 0 8px #ff4d4d;
 }
 
 .green{
     border-color:#44ff44;
+    box-shadow:0 0 8px #44ff44;
 }
 
 .orbs{
@@ -218,27 +222,36 @@ function explode(row,col,player){
     board[row][col].count=0;
     board[row][col].owner=0;
 
-    const dirs=[
-        [-1,0],
-        [1,0],
-        [0,-1],
-        [0,1]
-    ];
+    render();
 
-    dirs.forEach(dir=>{
+    setTimeout(()=>{
 
-        const nr=row+dir[0];
-        const nc=col+dir[1];
+        const dirs=[
+            [-1,0],
+            [1,0],
+            [0,-1],
+            [0,1]
+        ];
 
-        if(
-            nr>=0 &&
-            nr<rows &&
-            nc>=0 &&
-            nc<cols
-        ){
-            addOrb(nr,nc,player);
-        }
-    });
+        dirs.forEach(dir=>{
+
+            const nr=row+dir[0];
+            const nc=col+dir[1];
+
+            if(
+                nr>=0 &&
+                nr<rows &&
+                nc>=0 &&
+                nc<cols
+            ){
+                addOrb(nr,nc,player);
+            }
+
+        });
+
+        render();
+
+    },150);
 }
 
 function updateTurn(){
